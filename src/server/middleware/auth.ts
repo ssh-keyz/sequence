@@ -10,6 +10,7 @@ declare global {
         id: string;
         username: string;
         email: string;
+        // Add any other properties needed
       };
     }
   }

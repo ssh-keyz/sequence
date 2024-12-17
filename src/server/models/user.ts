@@ -1,6 +1,13 @@
 import bcrypt from 'bcrypt';
 import { db } from '../config/database';
 import jwt from 'jsonwebtoken';
+import session from 'express-session';
+
+declare module 'express-session' {
+  export interface SessionData {
+    user: { [key: string]: any };
+  }
+}
 
 export interface User {
   id: string;

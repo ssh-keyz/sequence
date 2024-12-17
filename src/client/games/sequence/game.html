@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequence Game</title>
+    <link href="/styles.css" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/games/sequence/index.js" type="module"></script>
+</head>
+<body class="bg-gray-800 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-12 gap-4">
+            <!-- Left sidebar - Player info -->
+            <div class="col-span-2">
+                <div id="player-info" class="bg-gray-700 rounded-lg p-4 text-white">
+                    <!-- Player information will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- Main game area -->
+            <div class="col-span-8">
+                <!-- Game status -->
+                <div class="bg-gray-700 rounded-lg p-4 mb-4 text-white text-center">
+                    <h1 class="text-2xl font-bold mb-2">Sequence Game</h1>
+                    <div id="game-status" class="text-lg">
+                        <!-- Game status will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Game board -->
+                <div id="game-board" class="bg-gray-700 rounded-lg p-4 mb-4">
+                    <!-- Game board will be dynamically inserted here -->
+                </div>
+
+                <!-- Player hand -->
+                <div id="player-hand" class="bg-gray-700 rounded-lg p-4">
+                    <!-- Player's cards will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- Right sidebar - Chat -->
+            <div class="col-span-2">
+                <div id="chat-container" class="bg-gray-700 rounded-lg p-4 text-white">
+                    <!-- Chat interface will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Game controls -->
+        <div class="fixed bottom-0 left-0 right-0 bg-gray-900 p-4">
+            <div class="container mx-auto flex justify-center gap-4">
+                <button id="draw-card" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50">
+                    Draw Card
+                </button>
+                <button id="end-turn" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50">
+                    End Turn
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accessibility features -->
+    <div class="sr-only" aria-live="polite" id="game-announcements">
+        <!-- Screen reader announcements will be dynamically inserted here -->
+    </div>
+</body>
+</html> 

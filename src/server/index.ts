@@ -15,6 +15,7 @@ import * as configuration from "./config";
 import { errorHandler, notFoundHandler } from "./middleware/error";
 import { authenticate, optionalAuthenticate } from "./middleware/auth";
 import authRoutes from "./routes/auth";
+import mainLobbyRouter from "./routes/main-lobby";
 
 const app = express();
 const server = createServer(app);
@@ -40,6 +41,10 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// Set up view engine
+app.set("views", path.join(process.cwd(), "src", "views"));
+app.set("view engine", "ejs");
 
 const staticPath = path.join(process.cwd(), "src", "public");
 app.use(express.static(staticPath));
@@ -69,11 +74,11 @@ io.on("connection", (socket) => {
 });
 
 app.use("/api/auth", authRoutes);
-
 app.use("/api/games", authenticate, /* games router */);
 app.use("/api/users", authenticate, /* users router */);
 
-app.use("/", optionalAuthenticate, /* public router */);
+// Use main-lobby router for root path
+app.use("/", optionalAuthenticate, mainLobbyRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

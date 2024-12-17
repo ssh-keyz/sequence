@@ -35,7 +35,9 @@ export const configureSocketIO = (server: HttpServer) => {
       // Attach user data to socket
       socket.data.user = {
         id: user.id,
-        username: user.username
+        username: user.username,
+        email: user.email
+        // Add any other properties needed
       };
 
       next();

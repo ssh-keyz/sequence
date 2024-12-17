@@ -4,11 +4,18 @@ import { Games } from "../db";
 const router = express.Router();
 
 router.get("/", async (request, response) => {
-  // @ts-expect-error TODO: Define the session type for the user object
-  const { id: userId } = request.session.user ?? {};
+  const userId = request.session.user?.id;
 
+  // Handle guest users by showing available games without player-specific data
   if (!userId) {
-    response.redirect("/login");
+    const availableGames = await Games.availableGames();
+    response.render("main-lobby", { 
+      title: "Welcome", 
+      availableGames: availableGames.map(game => ({
+        ...game,
+        currentPlayerIsMember: false
+      }))
+    });
     return;
   }
 

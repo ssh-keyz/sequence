@@ -72,6 +72,8 @@ export const asyncHandler = (fn: Function) => (
   Promise.resolve(fn(req, res, next)).catch(next);
 }; 
 
-function createError(arg0: number, arg1: string): any {
-    throw new Error('Function not implemented.');
+function createError(status: number, message: string): ErrorWithStatus {
+  const error: ErrorWithStatus = new Error(message);
+  error.status = status;
+  return error;
 }
