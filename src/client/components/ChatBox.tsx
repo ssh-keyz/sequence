@@ -1,17 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
-import { Socket } from 'socket.io-client';
-
-interface ChatMessage {
-  id: string;
-  userId: string;
-  username: string;
-  text: string;
-  timestamp: string;
-}
+import { useChat } from '../hooks/useChat';
 
 interface ChatBoxProps {
-  socket: Socket;
   gameId: string;
   currentUserId: string;
   currentUsername: string;
@@ -44,19 +35,6 @@ const MessageList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #bdc3c7;
-    border-radius: 4px;
-  }
 `;
 
 const MessageBubble = styled.div<{ isCurrentUser: boolean }>`
@@ -110,61 +88,16 @@ const SendButton = styled.button<{ isValid: boolean }>`
   }
 `;
 
-const SystemMessage = styled.div`
-  text-align: center;
-  color: #7f8c8d;
-  font-size: 0.9em;
-  margin: 8px 0;
-`;
-
 const ChatBox: React.FC<ChatBoxProps> = ({
-  socket,
   gameId,
   currentUserId,
   currentUsername
 }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const { messages, sendMessage } = useChat(gameId);
   const [newMessage, setNewMessage] = useState('');
   const messageListRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Listen for new messages
-    socket.on('chat-message', (message: ChatMessage) => {
-      setMessages(prev => [...prev, message]);
-    });
-
-    // Listen for system messages (player joined/left)
-    socket.on('player-joined', ({ username }) => {
-      const systemMessage: ChatMessage = {
-        id: `system-${Date.now()}`,
-        userId: 'system',
-        username: 'System',
-        text: `${username} joined the game`,
-        timestamp: new Date().toISOString()
-      };
-      setMessages(prev => [...prev, systemMessage]);
-    });
-
-    socket.on('player-left', ({ username }) => {
-      const systemMessage: ChatMessage = {
-        id: `system-${Date.now()}`,
-        userId: 'system',
-        username: 'System',
-        text: `${username} left the game`,
-        timestamp: new Date().toISOString()
-      };
-      setMessages(prev => [...prev, systemMessage]);
-    });
-
-    return () => {
-      socket.off('chat-message');
-      socket.off('player-joined');
-      socket.off('player-left');
-    };
-  }, [socket]);
-
-  useEffect(() => {
-    // Scroll to bottom when new messages arrive
     if (messageListRef.current) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
@@ -172,18 +105,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
 
   const handleSendMessage = () => {
     if (newMessage.trim() === '') return;
-
-    const message: Omit<ChatMessage, 'id' | 'timestamp'> = {
-      userId: currentUserId,
-      username: currentUsername,
-      text: newMessage.trim()
-    };
-
-    socket.emit('send-message', {
-      gameId,
-      message
-    });
-
+    sendMessage(newMessage.trim());
     setNewMessage('');
   };
 
@@ -203,23 +125,17 @@ const ChatBox: React.FC<ChatBoxProps> = ({
       <Header>Game Chat</Header>
       <MessageList ref={messageListRef}>
         {messages.map(message => (
-          message.userId === 'system' ? (
-            <SystemMessage key={message.id}>
-              {message.text}
-            </SystemMessage>
-          ) : (
-            <MessageBubble
-              key={message.id}
-              isCurrentUser={message.userId === currentUserId}
-            >
-              <MessageInfo isCurrentUser={message.userId === currentUserId}>
-                {message.userId === currentUserId ? 'You' : message.username}
-                {' • '}
-                {formatTimestamp(message.timestamp)}
-              </MessageInfo>
-              {message.text}
-            </MessageBubble>
-          )
+          <MessageBubble
+            key={message.id}
+            isCurrentUser={message.userId === currentUserId}
+          >
+            <MessageInfo isCurrentUser={message.userId === currentUserId}>
+              {message.userId === currentUserId ? 'You' : message.username}
+              {' • '}
+              {formatTimestamp(message.timestamp)}
+            </MessageInfo>
+            {message.text}
+          </MessageBubble>
         ))}
       </MessageList>
       <InputContainer>

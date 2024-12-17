@@ -1,22 +1,19 @@
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
 
-declare global {
-  interface Window {
-    socket: Socket;
-    roomId: number;
-  }
-}
+// Initialize socket connection
+export const socket = io();
 
-// declare module "express-session" {
-//   interface SessionData {
-//     user: {
-//       id: number;
-//       username: string;
-//       email: string;
-//       gravatar: string;
-//     };
-//     roomId: number;
-//   }
-// }
+// Get root element
+const container = document.getElementById('root');
+if (!container) throw new Error('Failed to find root element');
 
-window.socket = io();
+// Create root and render app
+const root = createRoot(container);
+root.render(
+  React.createElement(React.StrictMode, null,
+    React.createElement(App)
+  )
+);
