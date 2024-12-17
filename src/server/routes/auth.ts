@@ -17,12 +17,30 @@ const loginValidation = [
   check('password').notEmpty()
 ];
 
+// GET register page
+router.get('/register', (_req: Request, res: Response) => {
+  res.render('auth/register', { title: 'Register' });
+});
+
+// GET login page
+router.get('/login', (_req: Request, res: Response) => {
+  res.render('auth/login', { title: 'Login' });
+});
+
 // Register route
 router.post('/register', registerValidation, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
+      if (req.headers.accept?.includes('application/json')) {
+        res.status(400).json({ errors: errors.array() });
+      } else {
+        res.render('auth/register', { 
+          title: 'Register',
+          error: errors.array()[0].msg,
+          values: req.body
+        });
+      }
       return;
     }
 
@@ -31,11 +49,25 @@ router.post('/register', registerValidation, async (req: Request, res: Response,
     const auth = await UserModel.authenticate({ username, password });
     
     if (!auth) {
-      res.status(500).json({ error: 'Authentication failed after registration' });
+      const error = 'Authentication failed after registration';
+      if (req.headers.accept?.includes('application/json')) {
+        res.status(500).json({ error });
+      } else {
+        res.render('auth/register', { 
+          title: 'Register',
+          error,
+          values: req.body
+        });
+      }
       return;
     }
 
-    res.status(201).json({ token: auth.token, refreshToken: auth.refreshToken });
+    if (req.headers.accept?.includes('application/json')) {
+      res.status(201).json({ token: auth.token, refreshToken: auth.refreshToken });
+    } else {
+      req.session.user = auth.user;
+      res.redirect('/');
+    }
   } catch (err) {
     next(err);
   }
@@ -46,7 +78,15 @@ router.post('/login', loginValidation, async (req: Request, res: Response, next:
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
+      if (req.headers.accept?.includes('application/json')) {
+        res.status(400).json({ errors: errors.array() });
+      } else {
+        res.render('auth/login', { 
+          title: 'Login',
+          error: errors.array()[0].msg,
+          values: req.body
+        });
+      }
       return;
     }
 
@@ -54,18 +94,41 @@ router.post('/login', loginValidation, async (req: Request, res: Response, next:
     const user = await UserModel.findByEmail(email);
 
     if (!user) {
-      res.status(401).json({ error: 'Invalid credentials' });
+      const error = 'Invalid credentials';
+      if (req.headers.accept?.includes('application/json')) {
+        res.status(401).json({ error });
+      } else {
+        res.render('auth/login', { 
+          title: 'Login',
+          error,
+          values: req.body
+        });
+      }
       return;
     }
 
     const auth = await UserModel.authenticate({ username: user.username, password });
     
     if (!auth) {
-      res.status(401).json({ error: 'Invalid credentials' });
+      const error = 'Invalid credentials';
+      if (req.headers.accept?.includes('application/json')) {
+        res.status(401).json({ error });
+      } else {
+        res.render('auth/login', { 
+          title: 'Login',
+          error,
+          values: req.body
+        });
+      }
       return;
     }
 
-    res.json({ token: auth.token, refreshToken: auth.refreshToken });
+    if (req.headers.accept?.includes('application/json')) {
+      res.json({ token: auth.token, refreshToken: auth.refreshToken });
+    } else {
+      req.session.user = auth.user;
+      res.redirect('/');
+    }
   } catch (err) {
     next(err);
   }

@@ -10,7 +10,8 @@
     "db:migrate": "ts-node node_modules/node-pg-migrate/bin/node-pg-migrate.js up -j ts",
     "db:rollback": "ts-node node_modules/node-pg-migrate/bin/node-pg-migrate.js down -j ts",
     "build": "webpack build",
-    "build:dev": "webpack build --mode development --watch"
+    "build:dev": "webpack build --mode development --watch",
+    "migrate": "ts-node src/server/db/migrate.ts"
   },
   "lint-staged": {
     "**/*": [

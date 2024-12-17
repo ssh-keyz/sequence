@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <%- include ('../partials/head') %>
+  <body class="text-[12px]">
+    <div class="container mx-auto">
+      <%- include('../partials/menu') %>
+
+      <div class="flex flex-row">
+        <section class="basis-4/6 mr-[20px]">
+          <div
+            id="opponent-area"
+            class="w-[100%] flex flex-row justify-around min-h-[100px]"
+          ></div>
+          <div id="playing-table">
+            <div class="w-[60%] flex flex-row justify-between mx-auto">
+              <div
+                class="card back"
+                id="draw-pile"
+                data-game-id="<%= gameId %>"
+              ></div>
+
+              <div class="card blank" id="play-pile-n"></div>
+              <div class="card blank" id="play-pile-w"></div>
+              <div class="card blank" id="play-pile-e"></div>
+              <div class="card blank" id="play-pile-s"></div>
+            </div>
+            <div
+              id="player-area"
+              class="w-[100%] flex flex-row justify-around"
+            ></div>
+          </div>
+        </section>
+
+        <%- include('./templates') %>
+        <script src="/js/main.js"></script>
+        <div class="basis-2/6"><%- include('../partials/chat') %></div>
+        <script src="/js/games.js"></script>
+      </div>
+    </div>
+  </body>
+</html>

@@ -10,6 +10,13 @@ export default (app: Express): RequestHandler => {
     sessionMiddleware = session({
       store: new (connectPgSimple(session))({
         createTableIfMissing: true,
+        conObject: {
+          host: process.env.DB_HOST || 'localhost',
+          port: parseInt(process.env.DB_PORT || '5432', 10),
+          database: process.env.DB_NAME || 'sequence_game',
+          user: process.env.DB_USER || 'postgres',
+          password: process.env.DB_PASSWORD || 'postgres'
+        }
       }),
       secret: process.env.SESSION_SECRET!,
       resave: true,

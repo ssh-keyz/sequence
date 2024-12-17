@@ -74,6 +74,7 @@ io.on("connection", (socket) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes);
 app.use("/api/games", authenticate, /* games router */);
 app.use("/api/users", authenticate, /* users router */);
 
