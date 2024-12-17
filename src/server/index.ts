@@ -4,10 +4,24 @@ import express from "express";
 import morgan from "morgan";
 import * as path from "path";
 import { createServer } from "http";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
+import { IncomingMessage } from "http";
+import { SessionData } from "express-session";
+
+// Extend IncomingMessage to include session
+interface SessionIncomingMessage extends IncomingMessage {
+  session: SessionData;
+}
+
+// Extend Socket type to include session
+interface SessionSocket extends Socket {
+  request: IncomingMessage & {
+    session: SessionData;
+  };
+}
 
 dotenv.config();
 
@@ -23,7 +37,21 @@ const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "ws:", "wss:"],
+      fontSrc: ["'self'", "https:", "data:"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'self'"],
+    },
+  },
+}));
 app.use(cors({
   origin: process.env.NODE_ENV === "production"
     ? process.env.CORS_ORIGIN
@@ -46,26 +74,37 @@ app.use(cookieParser());
 app.set("views", path.join(process.cwd(), "src", "views"));
 app.set("view engine", "ejs");
 
-const staticPath = path.join(process.cwd(), "src", "public");
-app.use(express.static(staticPath));
-
-configuration.configureSession(app);
-
-io.use((socket, next) => {
-  const token = socket.handshake.auth.token;
-  if (!token) {
-    return next(new Error("Authentication error"));
+// Serve static files with explicit MIME types
+app.use(express.static(path.join(process.cwd(), "src", "public"), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
   }
-  try {
+}));
+
+// Set up Socket.IO with session support
+const sessionMiddleware = configuration.configureSession(app);
+
+const wrap = (middleware: any) => (socket: any, next: any) => middleware(socket.request, {}, next);
+
+io.use(wrap(sessionMiddleware));
+io.use((socket, next) => {
+  const session = (socket as SessionSocket).request.session;
+  if (session && session.user) {
     next();
-  } catch (err) {
-    next(new Error("Authentication error"));
+  } else {
+    next(new Error("Authentication required"));
   }
 });
 
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
-
+  
+  // Attach user data to socket
+  const user = (socket as SessionSocket).request.session.user;
+  socket.data.user = user;
+  
   socket.on("disconnect", () => {
     console.log("Client disconnected:", socket.id);
   });

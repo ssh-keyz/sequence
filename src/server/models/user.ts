@@ -25,7 +25,7 @@ export interface UserCreateInput {
 }
 
 export interface UserLoginInput {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -72,12 +72,12 @@ export class UserModel {
   /**
    * Authenticate a user and return JWT tokens if successful
    */
-  static async authenticate({ username, password }: UserLoginInput): Promise<{ 
+  static async authenticate({ email, password }: UserLoginInput): Promise<{ 
     user: Omit<User, 'password_hash'>,
     token: string,
     refreshToken: string 
   } | null> {
-    const user = await this.findByUsername(username);
+    const user = await this.findByEmail(email);
     
     if (!user) {
       return null;

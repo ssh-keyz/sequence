@@ -4,32 +4,27 @@ import { Games } from "../db";
 const router = express.Router();
 
 router.get("/", async (request, response) => {
-  const userId = request.session.user?.id;
+  const user = request.session.user;
 
-  // Handle guest users by showing available games without player-specific data
-  if (!userId) {
-    const availableGames = await Games.availableGames();
-    response.render("main-lobby", { 
-      title: "Welcome", 
-      availableGames: availableGames.map(game => ({
-        ...game,
-        currentPlayerIsMember: false
-      }))
-    });
+  // Handle guest users by redirecting to login
+  if (!user) {
+    response.redirect('/auth/login');
     return;
   }
 
   const availableGames = await Games.availableGames();
-  const playerGames: Record<number, boolean> = await Games.playerGames(userId);
+  const playerGames: Record<number, boolean> = await Games.playerGames(user.id);
 
-  // Probably a way to do this in SQL, but doesn't seem worth the effort at the moment
+  // Add currentPlayerIsMember flag to each game
   availableGames.forEach((game) => {
-    if (playerGames[game.id]) {
-      game.currentPlayerIsMember = true;
-    }
+    game.currentPlayerIsMember = playerGames[game.id] || false;
   });
 
-  response.render("main-lobby", { title: "Welcome", availableGames });
+  response.render("main-lobby", { 
+    title: "Game Lobby",
+    user,
+    availableGames
+  });
 });
 
 export default router;

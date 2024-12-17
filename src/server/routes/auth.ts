@@ -46,7 +46,7 @@ router.post('/register', registerValidation, async (req: Request, res: Response,
 
     const { username, email, password } = req.body;
     const user = await UserModel.create({ username, email, password });
-    const auth = await UserModel.authenticate({ username, password });
+    const auth = await UserModel.authenticate({ email, password });
     
     if (!auth) {
       const error = 'Authentication failed after registration';
@@ -91,23 +91,7 @@ router.post('/login', loginValidation, async (req: Request, res: Response, next:
     }
 
     const { email, password } = req.body;
-    const user = await UserModel.findByEmail(email);
-
-    if (!user) {
-      const error = 'Invalid credentials';
-      if (req.headers.accept?.includes('application/json')) {
-        res.status(401).json({ error });
-      } else {
-        res.render('auth/login', { 
-          title: 'Login',
-          error,
-          values: req.body
-        });
-      }
-      return;
-    }
-
-    const auth = await UserModel.authenticate({ username: user.username, password });
+    const auth = await UserModel.authenticate({ email, password });
     
     if (!auth) {
       const error = 'Invalid credentials';
