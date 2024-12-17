@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <%- include('../partials/head') %>
+  <body class="text-[12px]">
+    <div class="container mx-auto">
+      <%- include('../partials/menu') %>
+
+      <section>
+        <form
+          method="post"
+          action="/auth/register"
+          class="container w-[50%] mx-auto"
+        >
+          <div class="mb-[8px]">
+            <label for="username">Username</label>
+            <input
+              type="username"
+              id="username"
+              name="username"
+              placeholder="Choose your username"
+              required
+              class="block w-full px-2 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[2px] focus:ring-inset"
+            />
+          </div>
+          <div class="mb-[8px]">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@domain.com"
+              required
+              class="block w-full px-2 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[2px] focus:ring-inset"
+            />
+          </div>
+          <div class="mb-[8px]">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              class="block w-full px-2 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[2px] focus:ring-inset"
+            />
+          </div>
+          <div class="mb-[8px]">
+            <button
+              type="submit"
+              class="w-full rounded-md bg-blue-300 px-3 mt-[8px]"
+            >
+              Register
+            </button>
+            <a href="/" class="block text-center mt-[8px]">Login</a>
+          </div>
+        </form>
+      </section>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+<nav class="pt-[10px] flex flex-row justify-between mb-[20px]" %>">
+  <a href="<%= locals.user === undefined ? "/" : "/lobby" %>">
+    <img src="/images/logo.webp" alt="logo" class="w-[40px] h-[40px] rounded-[20px]"/>
+  </a>
+  <% if(locals.user !== undefined) { %>
+    <div class="flex flex-row items-center">
+      <a href="/logout">Logout</a>
+      <img src="https://gravatar.com/avatar/<%= locals.user.gravatar %>" alt="Gravatar of <%= locals.user.username %>" class="w-[40px] h-[40px] rounded-[20px] ml-[10px]"/>
+    </div>
+  <% } %>
+</nav>

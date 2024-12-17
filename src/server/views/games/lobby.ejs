@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <%- include ('../partials/head') %>
+  <body class="text-[12px]">
+    <div class="container mx-auto">
+      <%- include('../partials/menu') %>
+      <section>
+        <div class="flex flex-row">
+          <section class="basis-4/6 mr-[20px]">
+            Lobby page for game <%= gameId %>
+          </section>
+          <div class="basis-2/6"><%- include('../partials/chat') %></div>
+        </div>
+      </section>
+
+      <%- include('../partials/footer') %>
+      <script src="/js/game-lobby.js"></script>
+    </div>
+  </body>
+</html>
