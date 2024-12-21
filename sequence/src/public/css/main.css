@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.card {
+  @apply bg-white border border-gray-300 rounded-lg w-[40px] h-[60px] text-white relative flex items-center justify-center [text-shadow:_0_1px_0_rgb(0_0_0_/_40%)];
+}
+
+.card > span {
+  @apply text-[24px];
+}
+
+.card.value-0 > span {
+  @apply text-[8px];
+}
+
+.card.back {
+  @apply bg-cover bg-no-repeat bg-[url('/images/logo.webp')];
+}
+.card.blank {
+  @apply border-dashed bg-none;
+}
+
+.card.value-1,
+.card.value-2,
+.card.value-3,
+.card.value-4 {
+  @apply bg-blue-700;
+}
+.card.value-5,
+.card.value-6,
+.card.value-7,
+.card.value-8 {
+  @apply bg-green-700;
+}
+.card.value-9,
+.card.value-10,
+.card.value-11,
+.card.value-12 {
+  @apply bg-red-700;
+}
+.card.value-0 {
+  @apply bg-orange-400;
+}
+
+.card.value-1::before,
+.card.value-1::after {
+  content: "1";
+}
+.card.value-2::before,
+.card.value-2::after {
+  content: "2";
+}
+.card.value-3::before,
+.card.value-3::after {
+  content: "3";
+}
+.card.value-4::before,
+.card.value-4::after {
+  content: "4";
+}
+.card.value-5::before,
+.card.value-5::after {
+  content: "5";
+}
+.card.value-6::before,
+.card.value-6::after {
+  content: "6";
+}
+.card.value-7::before,
+.card.value-7::after {
+  content: "7";
+}
+.card.value-8::before,
+.card.value-8::after {
+  content: "8";
+}
+.card.value-9::before,
+.card.value-9::after {
+  content: "9";
+}
+.card.value-10::before,
+.card.value-10::after {
+  content: "10";
+}
+.card.value-11::before,
+.card.value-11::after {
+  content: "11";
+}
+.card.value-12::before,
+.card.value-12::after {
+  content: "12";
+}
+.card.wild::before,
+.card.wild::after {
+  content: "S";
+}
+
+.card::before {
+  @apply absolute left-[2px] top-[0px] text-[10px];
+}
+
+.card::after {
+  @apply absolute bottom-[0px] right-[2px] text-[10px] rotate-180;
+}
+
+#opponent-area > div {
+  @apply scale-50;
+}
+
+.current-player {
+  @apply bg-blue-300/45;
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | Sequence Game</title>
+    <link href="/styles.css" rel="stylesheet">
+</head>
+<body class="bg-gray-800 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-gray-700 rounded-lg p-8 text-white text-center">
+            <h1 class="text-4xl font-bold mb-4">Welcome to Sequence</h1>
+            <p class="mb-8">Please log in or create an account to start playing.</p>
+            <div class="flex justify-center gap-4">
+                <a href="/auth/login" class="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Login
+                </a>
+                <a href="/auth/register" class="px-6 py-3 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    Register
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

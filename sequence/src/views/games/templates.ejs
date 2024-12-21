@@ -1,0 +1,30 @@
+<template id="card-template">
+  <div class="card">
+    <span></span>
+  </div>
+</template>
+
+<template id="player-template">
+  <div class="player mt-[10px] rounded-md p-[10px]">
+    <h4 class="flex flex-row justify-start items-center">
+      <img class="gravatar w-[20px] h-[20px] rounded-[10px] mx-[10px]" />
+      <div class="flex flex-col">
+        <span class="username"></span>
+        <span class="card-count text-[8px] font-light"></span>
+      </div>
+    </h4>
+    <div class="flex flex-row justify-between">
+      <div class="flex flex-row hand scale-75"></div>
+      <div class="flex flex-row scale-75">
+        <div class="player-pile-0 mr-[8px]">
+          <div class="card back"></div>
+          <span class="absolute bottom-0 mb-[-20px]"></span>
+        </div>
+        <div class="player-pile-1 mr-[8px]"></div>
+        <div class="player-pile-2 mr-[8px]"></div>
+        <div class="player-pile-3 mr-[8px]"></div>
+        <div class="player-pile-4"></div>
+      </div>
+    </div>
+  </div>
+</template>
